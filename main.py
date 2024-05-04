@@ -1,7 +1,7 @@
 
-import os
 import discord
 import random
+from discord.ext import commands
 from config import TOKEN
 from utils import get_quote, sad_words, starter_encouragements
 
@@ -9,33 +9,26 @@ from utils import get_quote, sad_words, starter_encouragements
 intents = discord.Intents.default()
 intents.message_content = True
 
-# Create the Discord client, passing the intents object
-client = discord.Client(intents=intents)
+# Create the Discord bot, defining its command prefix and passing the intents object
+bot = commands.Bot(command_prefix='%', intents=intents)
 
 # Start Up Console Message
-@client.event
+@bot.event
 async def on_ready():
-  print(f"We have logged in as {client.user}")
+  print(f"We have logged in as {bot.user}")
 
 # Main Segment
-@client.event
-async def on_message(message):
-  msg = message.content
-  
-  if message.author == client.user:
-    return
+@bot.command()
+async def ping(ctx):
+  await ctx.send("pong")
 
-  if any(word in msg for word in sad_words):
-    await message.channel.send(random.choice(starter_encouragements))
+@bot.command()
+async def hello(ctx):
+  await ctx.send("Hello there!")
 
-  # Message with the prefix:
-  if msg.startswith("%"):
-    if msg == "%hello":
-      await message.channel.send("Hello there!")
+@bot.command()
+async def inspire(ctx):
+  quote = get_quote()
+  await ctx.send(quote)
 
-    if msg == "%inspire":
-      quote = get_quote()
-      await message.channel.send(quote)
-
-
-client.run(TOKEN)
+bot.run(TOKEN)
