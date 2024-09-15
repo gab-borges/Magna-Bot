@@ -1,6 +1,6 @@
 
-import requests
 import json
+import requests
 
 def get_quote():
   """
@@ -12,6 +12,19 @@ def get_quote():
   quote = '"' + json_data[0]['q'] + '" - ' + json_data[0]['a']
   
   return quote
+
+def get_joke():
+  """
+  Function that returns a joke with a setup and punchline using an API
+  """
+  response = requests.get("https://official-joke-api.appspot.com/random_joke")
+  joke_data = response.json()
+  setup = joke_data['setup']
+  punchline = joke_data['punchline']
+
+  joke = f"{setup}\n||{punchline}||"
+  return joke
+
 
 sad_words = ["sad", "depressed", "unhappy", "angry", "miserable", "depressing"]
 
